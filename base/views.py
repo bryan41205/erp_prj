@@ -116,12 +116,12 @@ def add_staff(request):
         staff_form = StaffCreationForm(request.POST)
         if staff_form.is_valid():
             new_user = staff_form.save()      
-            return redirect("admin_dashboard")
+            return redirect("manage_staff")
         else:
             print(staff_form.errors)
             return HttpResponse("something went wrong")
     staff_form = StaffCreationForm()
-    context = {"staff_form": staff_form}
+    context = {"form": staff_form}
     return render(request, "base/admin/add_staff.html", context)
 
 

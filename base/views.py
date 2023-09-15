@@ -61,8 +61,9 @@ def add_course(request):
         form=createcourseform(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('add_course')
+            return redirect('manage_course')
         else:
+            print(form.errors)
             HttpResponse('somethimg is wrong with the request')
     form = createcourseform()
     context={"form":form} 
@@ -150,6 +151,29 @@ def add_subject(request):
     context={"form":form}
     return render(request,'base/admin/add_subject.html', context)
 
+@login_required(login_url='login')
+@admin_required(login_url='login')
+def edit_subject(request, pk):
+    edit_subject=subject.objects.get(id=pk)
+    if request.method=='POST':
+        form=createsubjectform(request.POST, instance=edit_subject)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_subject')
+        else:
+            HttpResponse('somethimg is wrong with the request')
+    form=createsubjectform(instance=edit_subject)
+    context={"class":edit_subject,"form":form}
+    return render(request, 'base/admin/edit_subject.html', context)
+
+    
+@login_required(login_url='login')
+@admin_required(login_url='login')
+def delete_subject(request, pk):
+    delete_subject=subject.objects.get(id=pk)
+    delete_subject.delete()
+    return redirect("manage_subject")
+
 
 
 @login_required(login_url='login')
@@ -176,6 +200,28 @@ def create_class(request):
     context={"form":form} 
     return render(request,"base/admin/create_classes.html",context)
 
+@login_required(login_url='login')
+@admin_required(login_url='login')
+def edit_class(request, pk):
+    edit_class=classes.objects.get(id=pk)
+    if request.method=='POST':
+        form=createclassform(request.POST, instance=edit_class)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_class')
+        else:
+            HttpResponse('somethimg is wrong with the request')
+    form=createclassform(instance=edit_class)
+    context={"class":edit_class,"form":form}
+    return render(request, 'base/admin/edit_class.html', context)
+
+
+@login_required(login_url='login')
+@admin_required(login_url='login')
+def delete_class(request, pk):
+    delete_class=classes.objects.get(id=pk)
+    delete_class.delete()
+    return redirect("manage_class")
 
 
 @login_required(login_url='login')
@@ -226,7 +272,7 @@ logger = logging.getLogger(__name__)
 def edit_student(request, pk):
     edit_student=student.objects.get(user__id=pk)
     if request.method=='POST':
-        form=studentcreationform(request.POST, instance=edit_student)
+        form=StudentEditForm(request.POST, instance=edit_student)
         if form.is_valid():
             form.save()
             return redirect("manage_student")
@@ -235,7 +281,7 @@ def edit_student(request, pk):
             return redirect('admin_dashboard')
             logger.error(form.errors)
             print(form.errors)
-    form=studentcreationform(instance=edit_student, initial={
+    form=StudentEditForm(instance=edit_student, initial={
         'first_name': edit_student.user.first_name,
         'last_name':edit_student.user.last_name,
         'username': edit_student.user.username,
@@ -258,13 +304,13 @@ def delete_student(request, pk):
 def edit_staff(request, pk):
     edit_staff=staff.objects.get(user__id=pk)
     if request.method=='POST':
-        form=StaffCreationForm(request.POST, instance=edit_staff)
+        form=staffeditform(request.POST, instance=edit_staff)
         if form.is_valid():
             form.save()
             return redirect('manage_staff')
         else:
             HttpResponse('somethimg is wrong with the request')
-    form=StaffCreationForm(instance=edit_staff, initial={
+    form=staffeditform(instance=edit_staff, initial={
             'first_name': edit_staff.user.first_name,
             'last_name':edit_staff.user.last_name,
             'username': edit_staff.user.username,
@@ -383,11 +429,29 @@ def add_events(request):
     context = {'form': form, 'staff_users':staff_users}
     return render(request, 'base/admin/add_events.html', context)
 
-def edit_events(request):
-    form = eventform()
-    context={}
-    return render(request, "base/admin/edit_events.html")
+@login_required(login_url='login')
+def edit_events(request, pk):
+    edit_event=event.objects.get(id=pk)
+    if request.method=='POST':
+        form=eventform(request.POST, instance=edit_event)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_events')
+        else:
+            HttpResponse('somethimg is wrong with the request')
+    form=eventform(instance=edit_event)
+    staff_user=User.objects.filter(staff__isnull=False)
+    context={"event":edit_event,"form":form,"staff_user":staff_user}
+    return render(request, 'base/admin/edit_event.html', context)
 
+
+@login_required(login_url='login')
+@admin_required(login_url='login')
+def delete_event(request, pk):
+    delete_events=event.objects.get(id=pk)
+    delete_events.delete()
+    return redirect("manage_events")
+    
 
 def events(request):
     events = event.objects.filter(is_active=True)  # Fetch all active events from the database

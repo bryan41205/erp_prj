@@ -38,6 +38,28 @@
         cursor: pointer;
         border-radius: 5px;
     }
+    .action-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s; /* Add this line for button hover animation */
+    }
+
+    /* Add a hover effect */
+    .action-button:hover {
+        background-color: #45a049; /* Change the background color on hover */
+    }
+    #delete_btm{
+        background-color: red;
+    }
 
 </style>
     <a href="{% url 'add_staff' %}" class="add-button">Add Staff</a>

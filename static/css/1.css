@@ -50,6 +50,3 @@ ul.nav-menu li a:hover {
     background-color: rgb(78, 78, 78); /* Hover background color */
     color: white; /* Hover text color */
 }
-#logout{
-    background-color: rgb(255, 63, 63);
-}

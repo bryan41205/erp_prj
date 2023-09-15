@@ -3,7 +3,7 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/staff_form.css' %}">
   <div class="form-container">
-    <h1>Edit Course</h1>
+    <h1>Edit staff</h1>
     <form method="post">
       {% csrf_token %}
       <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>

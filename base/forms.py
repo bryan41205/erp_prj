@@ -61,8 +61,9 @@ class StaffCreationForm(UserCreationForm):
         }
         if self.instance.pk:
             st=self.instance
-            for key,val in st:
-                setattr(st, key, value)
+            obj = st
+            for key,val in staff_data.items():
+                setattr(st, key, val)
         else:
             obj = staff(**staff_data, user=user)
         obj.save()
@@ -86,7 +87,6 @@ class studentcreationform(UserCreationForm):
         super(ModelForm, self).__init__(*args, **kwargs)
 
     def save(self, **kwargs):
-    
         data = self.cleaned_data
         user_data = {
             'username': data.get('username', None),
@@ -115,13 +115,28 @@ class studentcreationform(UserCreationForm):
         }
         if self.instance.pk:
             st=self.instance
-            for key,val in student_data:
-                setattr(st, key, value)
+            obj = st
+            for key,val in student_data.items():
+                setattr(st, key, val)
         else:
             obj = student(**student_data, user=user)
         obj.save()
         return obj
 
+
+class StudentEditForm(studentcreationform):
+    password1 = None
+    password2 = None
+    class Meta:
+        model=student
+        fields=['address','phone_number','date_of_birth','enrollment_date','batch']
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'class': 'flatpickr'}),
+            'enrollment_date': forms.DateInput(attrs={'class': 'flatpickr'}),
+        }
+
+    def _post_clean(self):
+        return super(ModelForm, self)._post_clean()
 
 
 class roomform(ModelForm):
@@ -134,3 +149,19 @@ class eventform(ModelForm):
     class Meta:
         model = event
         fields = '__all__'
+
+
+class staffeditform(StaffCreationForm):
+    password1 = None
+    password2 = None
+    class Meta:
+        model=staff
+        fields = 'phone_number', 'position', 'username', 'staff_id'
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'class': 'flatpickr'}),
+            'enrollment_date': forms.DateInput(attrs={'class': 'flatpickr'}),
+        }
+
+    def _post_clean(self):
+        return super(ModelForm, self)._post_clean()
+

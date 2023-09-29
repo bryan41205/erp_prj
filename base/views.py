@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required, admin_required, staff_required, student_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from . forms import *
@@ -9,6 +9,7 @@ from django import forms
 from django.db.models import Q
 from django.contrib.auth.models import User
 import logging
+from .helpers import *
 
 
 # Create your views here.
